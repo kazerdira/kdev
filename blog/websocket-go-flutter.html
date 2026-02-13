@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time WebSocket Communication: Go Backend + Flutter Client — KDev</title>
+    <meta name="description" content="Build real-time features with WebSockets: Go server with gorilla/websocket, Flutter client integration, chat rooms, presence detection, and reconnection handling.">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7247328493564455" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo">k<span>.</span>dev</a>
+        <div class="nav-links">
+            <a href="../index.html">Home</a>
+            <a href="../projects.html">Projects</a>
+            <a href="../blog.html" class="active">Blog</a>
+            <a href="../about.html">About</a>
+            <a href="../contact.html">Contact</a>
+        </div>
+        <div class="nav-status">Available for work</div>
+        <button class="nav-toggle" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+    </nav>
+
+    <div class="mobile-menu">
+        <a href="../index.html">Home</a><a href="../projects.html">Projects</a><a href="../blog.html">Blog</a><a href="../about.html">About</a><a href="../contact.html">Contact</a>
+    </div>
+
+    <header class="page-header">
+        <div class="page-header-grid"></div>
+        <div class="page-header-content">
+            <div class="breadcrumb"><a href="../index.html">Home</a><span>/</span><a href="../blog.html">Blog</a><span>/</span><span>WebSockets</span></div>
+            <div class="page-tag">Go • Flutter • Real-time</div>
+            <h1 class="page-title">Real-time WebSocket Communication: Go Backend + Flutter Client</h1>
+            <div class="article-meta">
+                <span class="article-meta-item">📅 January 5, 2026</span>
+                <span class="article-meta-item">⏱️ 16 min read</span>
+                <span class="article-meta-item">✍️ KDev</span>
+            </div>
+        </div>
+    </header>
+
+    <section>
+        <div class="container-narrow">
+            <article class="article-content" style="padding: 0;">
+
+                <h2>Why WebSockets?</h2>
+                <p>HTTP is request-response: the client asks, the server answers. But many features need the server to push data to the client without being asked — chat messages, live notifications, collaborative editing, real-time dashboards. WebSockets provide a persistent, bidirectional connection between client and server.</p>
+                <p>In this guide, we'll build a complete real-time system: a Go WebSocket server that manages rooms and broadcasts messages, paired with a Flutter client that handles connection, reconnection, and message rendering.</p>
+
+                <h2>Go WebSocket Server</h2>
+                <p>We'll use <code>gorilla/websocket</code>, the standard Go WebSocket library. The architecture uses three concepts: <strong>Hub</strong> (manages all connections), <strong>Client</strong> (one per WebSocket connection), and <strong>Room</strong> (groups clients together).</p>
+
+                <h3>The Hub</h3>
+                <pre><code>package ws
+
+import (
+    "sync"
+    "log"
+)
+
+type Hub struct {
+    rooms      map[string]*Room
+    register   chan *Client
+    unregister chan *Client
+    broadcast  chan *Message
+    mu         sync.RWMutex
+}
+
+func NewHub() *Hub {
+    return &Hub{
+        rooms:      make(map[string]*Room),
+        register:   make(chan *Client),
+        unregister: make(chan *Client),
+        broadcast:  make(chan *Message, 256),
+    }
+}
+
+func (h *Hub) Run() {
+    for {
+        select {
+        case client := &lt;-h.register:
+            h.addToRoom(client)
+            log.Printf("Client %s joined room %s", client.ID, client.RoomID)
+
+        case client := &lt;-h.unregister:
+            h.removeFromRoom(client)
+            log.Printf("Client %s left room %s", client.ID, client.RoomID)
+
+        case msg := &lt;-h.broadcast:
+            h.mu.RLock()
+            if room, ok := h.rooms[msg.RoomID]; ok {
+                room.Broadcast(msg)
+            }
+            h.mu.RUnlock()
+        }
+    }
+}
+
+func (h *Hub) addToRoom(client *Client) {
+    h.mu.Lock()
+    defer h.mu.Unlock()
+
+    room, exists := h.rooms[client.RoomID]
+    if !exists {
+        room = NewRoom(client.RoomID)
+        h.rooms[client.RoomID] = room
+    }
+    room.Add(client)
+}
+
+func (h *Hub) removeFromRoom(client *Client) {
+    h.mu.Lock()
+    defer h.mu.Unlock()
+
+    if room, ok := h.rooms[client.RoomID]; ok {
+        room.Remove(client)
+        if room.IsEmpty() {
+            delete(h.rooms, client.RoomID)
+        }
+    }
+}</code></pre>
+
+                <h3>The Client</h3>
+                <pre><code>package ws
+
+import (
+    "encoding/json"
+    "time"
+
+    "github.com/gorilla/websocket"
+)
+
+const (
+    writeWait      = 10 * time.Second
+    pongWait       = 60 * time.Second
+    pingPeriod     = (pongWait * 9) / 10
+    maxMessageSize = 4096
+)
+
+type Client struct {
+    ID     string
+    RoomID string
+    conn   *websocket.Conn
+    hub    *Hub
+    send   chan []byte
+}
+
+func NewClient(id, roomID string, conn *websocket.Conn, hub *Hub) *Client {
+    return &Client{
+        ID:     id,
+        RoomID: roomID,
+        conn:   conn,
+        hub:    hub,
+        send:   make(chan []byte, 256),
+    }
+}
+
+// ReadPump reads messages from the WebSocket connection
+func (c *Client) ReadPump() {
+    defer func() {
+        c.hub.unregister &lt;- c
+        c.conn.Close()
+    }()
+
+    c.conn.SetReadLimit(maxMessageSize)
+    c.conn.SetReadDeadline(time.Now().Add(pongWait))
+    c.conn.SetPongHandler(func(string) error {
+        c.conn.SetReadDeadline(time.Now().Add(pongWait))
+        return nil
+    })
+
+    for {
+        _, rawMsg, err := c.conn.ReadMessage()
+        if err != nil {
+            break
+        }
+
+        var msg Message
+        if err := json.Unmarshal(rawMsg, &msg); err != nil {
+            continue
+        }
+        msg.SenderID = c.ID
+        msg.RoomID = c.RoomID
+        msg.Timestamp = time.Now().Unix()
+
+        c.hub.broadcast &lt;- &msg
+    }
+}
+
+// WritePump sends messages to the WebSocket connection
+func (c *Client) WritePump() {
+    ticker := time.NewTicker(pingPeriod)
+    defer func() {
+        ticker.Stop()
+        c.conn.Close()
+    }()
+
+    for {
+        select {
+        case message, ok := &lt;-c.send:
+            c.conn.SetWriteDeadline(time.Now().Add(writeWait))
+            if !ok {
+                c.conn.WriteMessage(websocket.CloseMessage, []byte{})
+                return
+            }
+            if err := c.conn.WriteMessage(websocket.TextMessage, message); err != nil {
+                return
+            }
+
+        case &lt;-ticker.C:
+            c.conn.SetWriteDeadline(time.Now().Add(writeWait))
+            if err := c.conn.WriteMessage(websocket.PingMessage, nil); err != nil {
+                return
+            }
+        }
+    }
+}</code></pre>
+
+                <h3>HTTP Upgrade Handler</h3>
+                <pre><code>package ws
+
+import (
+    "net/http"
+
+    "github.com/gorilla/websocket"
+)
+
+var upgrader = websocket.Upgrader{
+    ReadBufferSize:  1024,
+    WriteBufferSize: 1024,
+    CheckOrigin: func(r *http.Request) bool {
+        // In production, validate the origin
+        return true
+    },
+}
+
+func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
+    roomID := r.URL.Query().Get("room")
+    userID := r.URL.Query().Get("user")
+
+    if roomID == "" || userID == "" {
+        http.Error(w, "room and user required", http.StatusBadRequest)
+        return
+    }
+
+    conn, err := upgrader.Upgrade(w, r, nil)
+    if err != nil {
+        return
+    }
+
+    client := NewClient(userID, roomID, conn, hub)
+    hub.register &lt;- client
+
+    // Start read/write pumps in separate goroutines
+    go client.WritePump()
+    go client.ReadPump()
+}</code></pre>
+
+                <h2>Message Protocol</h2>
+                <p>Define a structured message format that both Go and Flutter understand:</p>
+                <pre><code>// Go
+type Message struct {
+    Type      string `json:"type"`       // "chat", "typing", "presence", "system"
+    RoomID    string `json:"room_id"`
+    SenderID  string `json:"sender_id"`
+    Content   string `json:"content"`
+    Timestamp int64  `json:"timestamp"`
+}
+
+// Dart
+class WsMessage {
+  final String type;      // "chat", "typing", "presence", "system"
+  final String roomId;
+  final String senderId;
+  final String content;
+  final int timestamp;
+
+  WsMessage({
+    required this.type,
+    required this.roomId,
+    required this.senderId,
+    required this.content,
+    required this.timestamp,
+  });
+
+  factory WsMessage.fromJson(Map&lt;String, dynamic&gt; json) => WsMessage(
+    type: json['type'] ?? '',
+    roomId: json['room_id'] ?? '',
+    senderId: json['sender_id'] ?? '',
+    content: json['content'] ?? '',
+    timestamp: json['timestamp'] ?? 0,
+  );
+
+  Map&lt;String, dynamic&gt; toJson() => {
+    'type': type,
+    'room_id': roomId,
+    'sender_id': senderId,
+    'content': content,
+    'timestamp': timestamp,
+  };
+}</code></pre>
+
+                <h2>Flutter WebSocket Client</h2>
+                <p>The Flutter client needs to handle connection, automatic reconnection, and message streaming:</p>
+                <pre><code>import 'dart:async';
+import 'dart:convert';
+import 'package:web_socket_channel/web_socket_channel.dart';
+
+class WebSocketService {
+  WebSocketChannel? _channel;
+  final _messageController = StreamController&lt;WsMessage&gt;.broadcast();
+  final _connectionController = StreamController&lt;bool&gt;.broadcast();
+
+  Timer? _reconnectTimer;
+  Timer? _pingTimer;
+  bool _isConnected = false;
+  int _reconnectAttempts = 0;
+  static const int _maxReconnectAttempts = 10;
+
+  String? _url;
+
+  Stream&lt;WsMessage&gt; get messages => _messageController.stream;
+  Stream&lt;bool&gt; get connectionState => _connectionController.stream;
+  bool get isConnected => _isConnected;
+
+  Future&lt;void&gt; connect(String baseUrl, String roomId, String userId) async {
+    _url = '$baseUrl?room=$roomId&user=$userId';
+    await _establishConnection();
+  }
+
+  Future&lt;void&gt; _establishConnection() async {
+    try {
+      _channel = WebSocketChannel.connect(Uri.parse(_url!));
+      await _channel!.ready;
+
+      _isConnected = true;
+      _reconnectAttempts = 0;
+      _connectionController.add(true);
+
+      // Start ping timer to keep connection alive
+      _pingTimer?.cancel();
+      _pingTimer = Timer.periodic(
+        const Duration(seconds: 30),
+        (_) => send(WsMessage(
+          type: 'ping',
+          roomId: '', senderId: '', content: '',
+          timestamp: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+        )),
+      );
+
+      // Listen for messages
+      _channel!.stream.listen(
+        (data) {
+          final json = jsonDecode(data as String);
+          final message = WsMessage.fromJson(json);
+          _messageController.add(message);
+        },
+        onError: (error) {
+          _handleDisconnect();
+        },
+        onDone: () {
+          _handleDisconnect();
+        },
+      );
+    } catch (e) {
+      _handleDisconnect();
+    }
+  }
+
+  void send(WsMessage message) {
+    if (_isConnected && _channel != null) {
+      _channel!.sink.add(jsonEncode(message.toJson()));
+    }
+  }
+
+  void _handleDisconnect() {
+    _isConnected = false;
+    _connectionController.add(false);
+    _pingTimer?.cancel();
+    _scheduleReconnect();
+  }
+
+  void _scheduleReconnect() {
+    if (_reconnectAttempts >= _maxReconnectAttempts) return;
+
+    _reconnectTimer?.cancel();
+    final delay = Duration(
+      seconds: (2 * (_reconnectAttempts + 1)).clamp(1, 30),
+    );
+    _reconnectAttempts++;
+
+    _reconnectTimer = Timer(delay, () async {
+      await _establishConnection();
+    });
+  }
+
+  void disconnect() {
+    _reconnectTimer?.cancel();
+    _pingTimer?.cancel();
+    _channel?.sink.close();
+    _isConnected = false;
+    _connectionController.add(false);
+  }
+
+  void dispose() {
+    disconnect();
+    _messageController.close();
+    _connectionController.close();
+  }
+}</code></pre>
+
+                <h2>Flutter UI: Chat Screen</h2>
+                <pre><code>class ChatScreen extends StatefulWidget {
+  final String roomId;
+  const ChatScreen({required this.roomId});
+
+  @override
+  State&lt;ChatScreen&gt; createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State&lt;ChatScreen&gt; {
+  final _wsService = WebSocketService();
+  final _messageCtrl = TextEditingController();
+  final _scrollCtrl = ScrollController();
+  final List&lt;WsMessage&gt; _messages = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _wsService.connect('ws://localhost:8080/ws', widget.roomId, 'user123');
+    _wsService.messages.listen((msg) {
+      if (msg.type == 'chat') {
+        setState(() => _messages.add(msg));
+        _scrollToBottom();
+      }
+    });
+  }
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollCtrl.hasClients) {
+        _scrollCtrl.animateTo(
+          _scrollCtrl.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
+  void _sendMessage() {
+    final text = _messageCtrl.text.trim();
+    if (text.isEmpty) return;
+    _wsService.send(WsMessage(
+      type: 'chat',
+      roomId: widget.roomId,
+      senderId: 'user123',
+      content: text,
+      timestamp: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+    ));
+    _messageCtrl.clear();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Room: ${widget.roomId}'),
+        actions: [
+          StreamBuilder&lt;bool&gt;(
+            stream: _wsService.connectionState,
+            builder: (ctx, snap) => Icon(
+              Icons.circle,
+              color: (snap.data ?? false) ? Colors.green : Colors.red,
+              size: 12,
+            ),
+          ),
+          const SizedBox(width: 16),
+        ],
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              controller: _scrollCtrl,
+              itemCount: _messages.length,
+              padding: const EdgeInsets.all(16),
+              itemBuilder: (ctx, i) {
+                final msg = _messages[i];
+                final isMe = msg.senderId == 'user123';
+                return Align(
+                  alignment: isMe
+                      ? Alignment.centerRight
+                      : Alignment.centerLeft,
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: isMe ? Colors.blue : Colors.grey[800],
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Text(msg.content),
+                  ),
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _messageCtrl,
+                    onSubmitted: (_) => _sendMessage(),
+                    decoration: const InputDecoration(
+                      hintText: 'Type a message...',
+                    ),
+                  ),
+                ),
+                IconButton(
+                  onPressed: _sendMessage,
+                  icon: const Icon(Icons.send),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _wsService.dispose();
+    _messageCtrl.dispose();
+    _scrollCtrl.dispose();
+    super.dispose();
+  }
+}</code></pre>
+
+                <h2>Scaling Considerations</h2>
+                <ul>
+                    <li><strong>Redis Pub/Sub</strong> — When running multiple Go instances, use Redis to broadcast messages across servers.</li>
+                    <li><strong>Connection limits</strong> — Each WebSocket holds a goroutine. Monitor goroutine count and set connection limits.</li>
+                    <li><strong>Message queuing</strong> — For guaranteed delivery, persist messages to a database and use WebSocket only for real-time push.</li>
+                    <li><strong>Authentication</strong> — Validate JWT tokens during the HTTP upgrade, not after the WebSocket is established.</li>
+                    <li><strong>Rate limiting</strong> — Prevent message flooding with per-client rate limits in the ReadPump.</li>
+                </ul>
+
+                <h2>Conclusion</h2>
+                <p>WebSockets unlock real-time features that HTTP can't provide. Go's goroutine model makes it excellent for handling thousands of concurrent connections, and Flutter's stream-based architecture maps perfectly to WebSocket data flows. Start with the Hub/Client/Room pattern, add reconnection logic on the client side, and scale with Redis when you need multiple server instances.</p>
+
+                <div class="article-tags">
+                    <a href="../blog.html" class="article-tag">WebSocket</a>
+                    <a href="../blog.html" class="article-tag">Go</a>
+                    <a href="../blog.html" class="article-tag">Flutter</a>
+                    <a href="../blog.html" class="article-tag">Real-time</a>
+                    <a href="../blog.html" class="article-tag">Backend</a>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section style="background: var(--bg-elevated); text-align: center; padding: 6rem 4rem;">
+        <div class="section-label" style="justify-content: center;">More Articles</div>
+        <h2 class="section-title" style="text-align: center;">Keep Reading</h2>
+        <p class="section-desc" style="margin: 0 auto 2rem; text-align: center;">Explore more articles on development.</p>
+        <a href="../blog.html" class="btn-primary">← Back to Blog</a>
+    </section>
+
+    <footer>
+        <div class="footer-text">© 2026 <span>k.dev</span> — Crafted with precision</div>
+        <div class="footer-links"><a href="../index.html" class="footer-link">Home</a><a href="../projects.html" class="footer-link">Projects</a><a href="../blog.html" class="footer-link">Blog</a><a href="../about.html" class="footer-link">About</a><a href="../contact.html" class="footer-link">Contact</a></div>
+        <div class="footer-text">Designed &amp; built by <span>KDev</span></div>
+    </footer>
+
+    <script>
+        const navToggle=document.querySelector('.nav-toggle'),mobileMenu=document.querySelector('.mobile-menu');if(navToggle&&mobileMenu){navToggle.addEventListener('click',()=>{navToggle.classList.toggle('open');mobileMenu.classList.toggle('open');document.body.style.overflow=mobileMenu.classList.contains('open')?'hidden':''});mobileMenu.querySelectorAll('a').forEach(l=>{l.addEventListener('click',()=>{navToggle.classList.remove('open');mobileMenu.classList.remove('open');document.body.style.overflow=''})})}
+        const nav=document.getElementById('nav');window.addEventListener('scroll',()=>{nav.classList.toggle('scrolled',window.scrollY>50)});
+    </script>
+</body>
+</html>

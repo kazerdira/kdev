@@ -1,18 +1,310 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
-    <link rel="icon" href="/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KDev — Full-Stack Developer</title>
-    <meta name="description" content="Full-stack developer specializing in Flutter, Go, Firebase, and modern web technologies. Building production-ready mobile apps, APIs, and real-time systems.">
+    <title>KDev — Full Stack Developer</title>
+    <meta name="description" content="Full-stack developer specializing in Go, Flutter, Firebase, and modern web technologies. Building production-ready mobile apps, APIs, and real-time systems.">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7247328493564455" crossorigin="anonymous"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7247328493564455" crossorigin="anonymous"></script>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- Nav -->
+    <nav id="nav">
+        <a href="index.html" class="nav-logo">k<span>.</span>dev</a>
+        <div class="nav-links">
+            <a href="index.html" class="active">Home</a>
+            <a href="projects.html">Projects</a>
+            <a href="blog.html">Blog</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <div class="nav-status">Available for work</div>
+        <button class="nav-toggle" aria-label="Toggle navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <a href="index.html">Home</a>
+        <a href="projects.html">Projects</a>
+        <a href="blog.html">Blog</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-grid"></div>
+        <div class="hero-glow"></div>
+        <div class="hero-glow-2"></div>
+        <div class="hero-content">
+            <div class="hero-tag">Full Stack Developer</div>
+            <h1 class="hero-title">
+                <span class="line">Building</span>
+                <span class="line"><span class="gradient">digital</span> products</span>
+                <span class="line"><span class="outline">that scale.</span></span>
+            </h1>
+            <p class="hero-desc">
+                I craft performant backends, polished mobile apps, and resilient systems — from concept to deployment.
+            </p>
+            <div class="hero-actions">
+                <a href="contact.html" class="btn-primary">Get in Touch →</a>
+                <a href="projects.html" class="btn-secondary">See my work</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Marquee -->
+    <div class="marquee-section">
+        <div class="marquee-track">
+            <span class="marquee-item"><span class="dot"></span>Go / Golang</span>
+            <span class="marquee-item"><span class="dot"></span>Flutter &amp; Dart</span>
+            <span class="marquee-item"><span class="dot"></span>React</span>
+            <span class="marquee-item"><span class="dot"></span>Docker</span>
+            <span class="marquee-item"><span class="dot"></span>PostgreSQL</span>
+            <span class="marquee-item"><span class="dot"></span>Firebase</span>
+            <span class="marquee-item"><span class="dot"></span>Agora SDK</span>
+            <span class="marquee-item"><span class="dot"></span>LiveKit</span>
+            <span class="marquee-item"><span class="dot"></span>REST APIs</span>
+            <span class="marquee-item"><span class="dot"></span>WebSockets</span>
+            <span class="marquee-item"><span class="dot"></span>Python</span>
+            <span class="marquee-item"><span class="dot"></span>CI/CD</span>
+            <!-- Duplicate for seamless loop -->
+            <span class="marquee-item"><span class="dot"></span>Go / Golang</span>
+            <span class="marquee-item"><span class="dot"></span>Flutter &amp; Dart</span>
+            <span class="marquee-item"><span class="dot"></span>React</span>
+            <span class="marquee-item"><span class="dot"></span>Docker</span>
+            <span class="marquee-item"><span class="dot"></span>PostgreSQL</span>
+            <span class="marquee-item"><span class="dot"></span>Firebase</span>
+            <span class="marquee-item"><span class="dot"></span>Agora SDK</span>
+            <span class="marquee-item"><span class="dot"></span>LiveKit</span>
+            <span class="marquee-item"><span class="dot"></span>REST APIs</span>
+            <span class="marquee-item"><span class="dot"></span>WebSockets</span>
+            <span class="marquee-item"><span class="dot"></span>Python</span>
+            <span class="marquee-item"><span class="dot"></span>CI/CD</span>
+        </div>
+    </div>
+
+    <!-- Stack -->
+    <section id="stack">
+        <div class="reveal">
+            <div class="section-label">Tech Stack</div>
+            <h2 class="section-title">Tools of the trade.</h2>
+            <p class="section-desc">Battle-tested technologies I use to ship production-ready software.</p>
+        </div>
+        <div class="stack-grid reveal">
+            <div class="stack-card">
+                <div class="stack-icon">⚡</div>
+                <div class="stack-name">Go</div>
+                <div class="stack-desc">High-performance APIs, microservices, and concurrent backend systems built for scale.</div>
+            </div>
+            <div class="stack-card">
+                <div class="stack-icon">📱</div>
+                <div class="stack-name">Flutter</div>
+                <div class="stack-desc">Cross-platform mobile apps with native performance and polished UI/UX.</div>
+            </div>
+            <div class="stack-card">
+                <div class="stack-icon">⚛️</div>
+                <div class="stack-name">React</div>
+                <div class="stack-desc">Modern web interfaces, dashboards, and interactive frontends.</div>
+            </div>
+            <div class="stack-card">
+                <div class="stack-icon">🐳</div>
+                <div class="stack-name">Docker</div>
+                <div class="stack-desc">Containerized deployments, reproducible environments, seamless CI/CD pipelines.</div>
+            </div>
+            <div class="stack-card">
+                <div class="stack-icon">🔥</div>
+                <div class="stack-name">Firebase</div>
+                <div class="stack-desc">Auth, real-time database, push notifications, and cloud functions.</div>
+            </div>
+            <div class="stack-card">
+                <div class="stack-icon">🎙️</div>
+                <div class="stack-name">Real-Time</div>
+                <div class="stack-desc">Voice, video, and live collaboration using Agora, LiveKit, and WebSockets.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <div class="reveal">
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-value">5+</div>
+                <div class="stat-label">Apps Shipped</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">3+</div>
+                <div class="stat-label">Years Coding</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">∞</div>
+                <div class="stat-label">Coffee Consumed</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">24/7</div>
+                <div class="stat-label">Uptime Mindset</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Services -->
+    <section id="services">
+        <div class="reveal">
+            <div class="section-label">What I Do</div>
+            <h2 class="section-title">End-to-end delivery.</h2>
+            <p class="section-desc">From system architecture to pixel-perfect UIs — I handle the full stack.</p>
+        </div>
+        <div class="services-grid reveal">
+            <div class="service-card">
+                <div class="service-number">01</div>
+                <div class="service-name">Backend Engineering</div>
+                <div class="service-desc">Scalable APIs, database design, authentication, payment systems, and real-time communication layers.</div>
+                <div class="service-tags">
+                    <span class="service-tag">Go</span>
+                    <span class="service-tag">PostgreSQL</span>
+                    <span class="service-tag">SQLC</span>
+                    <span class="service-tag">REST</span>
+                    <span class="service-tag">WebSocket</span>
+                </div>
+            </div>
+            <div class="service-card">
+                <div class="service-number">02</div>
+                <div class="service-name">Mobile Development</div>
+                <div class="service-desc">Native-quality cross-platform apps with custom animations, offline support, and seamless integrations.</div>
+                <div class="service-tags">
+                    <span class="service-tag">Flutter</span>
+                    <span class="service-tag">Dart</span>
+                    <span class="service-tag">Firebase</span>
+                    <span class="service-tag">Play Store</span>
+                </div>
+            </div>
+            <div class="service-card">
+                <div class="service-number">03</div>
+                <div class="service-name">Web &amp; Dashboards</div>
+                <div class="service-desc">Interactive frontends, admin panels, and data-driven dashboards with clean, responsive design.</div>
+                <div class="service-tags">
+                    <span class="service-tag">React</span>
+                    <span class="service-tag">Three.js</span>
+                    <span class="service-tag">Tailwind</span>
+                    <span class="service-tag">Vercel</span>
+                </div>
+            </div>
+            <div class="service-card">
+                <div class="service-number">04</div>
+                <div class="service-name">DevOps &amp; Infrastructure</div>
+                <div class="service-desc">Containerized deployments, automated pipelines, monitoring, and production-grade infrastructure.</div>
+                <div class="service-tags">
+                    <span class="service-tag">Docker</span>
+                    <span class="service-tag">CI/CD</span>
+                    <span class="service-tag">Linux</span>
+                    <span class="service-tag">Cloud</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Terminal -->
+    <section class="terminal-section" id="terminal">
+        <div class="reveal">
+            <div class="terminal">
+                <div class="terminal-header">
+                    <div class="terminal-dot r"></div>
+                    <div class="terminal-dot y"></div>
+                    <div class="terminal-dot g"></div>
+                    <span class="terminal-title">kdev@arch ~ </span>
+                </div>
+                <div class="terminal-body">
+                    <div class="terminal-line"><span class="prompt">→ </span><span class="cmd">whoami</span></div>
+                    <div class="terminal-line"><span class="output">Full Stack Developer based in Algeria 🇩🇿</span></div>
+                    <br>
+                    <div class="terminal-line"><span class="prompt">→ </span><span class="cmd">cat philosophy.txt</span></div>
+                    <div class="terminal-line"><span class="string">"Ship clean code. Build for production.</span></div>
+                    <div class="terminal-line"><span class="string"> No shortcuts, no prototypes — industrial grade."</span></div>
+                    <br>
+                    <div class="terminal-line"><span class="prompt">→ </span><span class="cmd">ls ./interests</span></div>
+                    <div class="terminal-line"><span class="key">systems-design/</span>  <span class="key">real-time-apps/</span>  <span class="key">mobile-ux/</span></div>
+                    <div class="terminal-line"><span class="key">databases/</span>  <span class="key">clean-architecture/</span>  <span class="key">open-source/</span></div>
+                    <br>
+                    <div class="terminal-line"><span class="prompt">→ </span><span class="cursor"></span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section" id="contact">
+        <div class="cta-glow"></div>
+        <div class="cta-content reveal">
+            <div class="section-label" style="justify-content: center;">Get in Touch</div>
+            <h2 class="cta-title">Let's build <span class="gradient">something great.</span></h2>
+            <p class="cta-desc">Got a project in mind? I'm always open to discussing new ideas and opportunities.</p>
+            <div class="cta-links">
+                <a href="mailto:wolverix.app@gmail.com" class="cta-link">✉️ Email</a>
+                <a href="https://github.com/kazerdira" class="cta-link" target="_blank">🐙 GitHub</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-text">© 2026 <span>k.dev</span> — Crafted with precision</div>
+        <div class="footer-links">
+            <a href="index.html" class="footer-link">Home</a>
+            <a href="projects.html" class="footer-link">Projects</a>
+            <a href="blog.html" class="footer-link">Blog</a>
+            <a href="about.html" class="footer-link">About</a>
+            <a href="contact.html" class="footer-link">Contact</a>
+        </div>
+        <div class="footer-text">Designed &amp; built by <span>KDev</span></div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const navToggle = document.querySelector('.nav-toggle');
+        const mobileMenu = document.querySelector('.mobile-menu');
+
+        if (navToggle && mobileMenu) {
+            navToggle.addEventListener('click', () => {
+                navToggle.classList.toggle('open');
+                mobileMenu.classList.toggle('open');
+                document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+            });
+
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navToggle.classList.remove('open');
+                    mobileMenu.classList.remove('open');
+                    document.body.style.overflow = '';
+                });
+            });
+        }
+
+        // Nav scroll effect
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // Scroll reveal
+        const reveals = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        reveals.forEach(el => observer.observe(el));
+    </script>
+</body>
 </html>

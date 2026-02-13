@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clean Architecture in Flutter: A Practical Guide — KDev</title>
+    <meta name="description" content="Implement Clean Architecture in Flutter with domain-driven layers, dependency injection, repository pattern, use cases, and testable code structure.">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7247328493564455" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo">k<span>.</span>dev</a>
+        <div class="nav-links">
+            <a href="../index.html">Home</a>
+            <a href="../projects.html">Projects</a>
+            <a href="../blog.html" class="active">Blog</a>
+            <a href="../about.html">About</a>
+            <a href="../contact.html">Contact</a>
+        </div>
+        <div class="nav-status">Available for work</div>
+        <button class="nav-toggle" aria-label="Toggle navigation"><span></span><span></span><span></span></button>
+    </nav>
+
+    <div class="mobile-menu">
+        <a href="../index.html">Home</a><a href="../projects.html">Projects</a><a href="../blog.html">Blog</a><a href="../about.html">About</a><a href="../contact.html">Contact</a>
+    </div>
+
+    <header class="page-header">
+        <div class="page-header-grid"></div>
+        <div class="page-header-content">
+            <div class="breadcrumb"><a href="../index.html">Home</a><span>/</span><a href="../blog.html">Blog</a><span>/</span><span>Clean Architecture</span></div>
+            <div class="page-tag">Flutter • Architecture</div>
+            <h1 class="page-title">Clean Architecture in Flutter: A Practical Guide</h1>
+            <div class="article-meta">
+                <span class="article-meta-item">📅 January 12, 2026</span>
+                <span class="article-meta-item">⏱️ 15 min read</span>
+                <span class="article-meta-item">✍️ KDev</span>
+            </div>
+        </div>
+    </header>
+
+    <section>
+        <div class="container-narrow">
+            <article class="article-content" style="padding: 0;">
+
+                <h2>Why Clean Architecture?</h2>
+                <p>Every Flutter app starts simple. A few screens, some API calls, maybe a state management solution. Then it grows — features pile up, the codebase becomes tangled, and suddenly changing one thing breaks three others. Clean Architecture prevents this by enforcing separation of concerns from day one.</p>
+                <p>The core idea is simple: <strong>your business logic should never depend on frameworks, databases, or UI</strong>. If you swap Firebase for Supabase, only the data layer changes. If you switch from BLoC to Riverpod, only the presentation layer changes. Your domain logic remains untouched.</p>
+
+                <h2>The Three Layers</h2>
+                <p>Clean Architecture in Flutter has three layers, each with a clear responsibility:</p>
+                <pre><code>lib/
+├── core/                    # Shared utilities
+│   ├── error/
+│   │   ├── failures.dart    # Domain-level error types
+│   │   └── exceptions.dart  # Data-level exceptions
+│   ├── usecases/
+│   │   └── usecase.dart     # Base use case interface
+│   └── network/
+│       └── network_info.dart
+│
+├── features/
+│   └── authentication/
+│       ├── domain/          # Layer 1: Business logic
+│       │   ├── entities/
+│       │   │   └── user.dart
+│       │   ├── repositories/
+│       │   │   └── auth_repository.dart  (abstract)
+│       │   └── usecases/
+│       │       ├── login.dart
+│       │       ├── register.dart
+│       │       └── get_current_user.dart
+│       │
+│       ├── data/            # Layer 2: Data access
+│       │   ├── models/
+│       │   │   └── user_model.dart
+│       │   ├── datasources/
+│       │   │   ├── auth_remote_datasource.dart
+│       │   │   └── auth_local_datasource.dart
+│       │   └── repositories/
+│       │       └── auth_repository_impl.dart
+│       │
+│       └── presentation/   # Layer 3: UI
+│           ├── bloc/
+│           │   ├── auth_bloc.dart
+│           │   ├── auth_event.dart
+│           │   └── auth_state.dart
+│           ├── pages/
+│           │   ├── login_page.dart
+│           │   └── register_page.dart
+│           └── widgets/
+│               └── auth_form.dart</code></pre>
+
+                <h2>Layer 1: Domain</h2>
+                <p>The domain layer is the heart of your app. It contains entities (pure business objects), repository interfaces (abstract contracts), and use cases (single-purpose business operations). It has <strong>zero dependencies</strong> on Flutter, packages, or external services.</p>
+                <pre><code>// Entity: pure Dart, no framework dependencies
+class User {
+  final String id;
+  final String name;
+  final String email;
+  final DateTime createdAt;
+
+  const User({
+    required this.id,
+    required this.name,
+    required this.email,
+    required this.createdAt,
+  });
+}
+
+// Repository interface: defines WHAT, not HOW
+abstract class AuthRepository {
+  Future&lt;Either&lt;Failure, User&gt;&gt; login(String email, String password);
+  Future&lt;Either&lt;Failure, User&gt;&gt; register(String name, String email, String password);
+  Future&lt;Either&lt;Failure, User&gt;&gt; getCurrentUser();
+  Future&lt;Either&lt;Failure, void&gt;&gt; logout();
+}
+
+// Use case: one operation, one class
+class LoginUseCase implements UseCase&lt;User, LoginParams&gt; {
+  final AuthRepository repository;
+  const LoginUseCase(this.repository);
+
+  @override
+  Future&lt;Either&lt;Failure, User&gt;&gt; call(LoginParams params) {
+    return repository.login(params.email, params.password);
+  }
+}
+
+class LoginParams {
+  final String email;
+  final String password;
+  const LoginParams({required this.email, required this.password});
+}</code></pre>
+                <p>Notice the use of <code>Either&lt;Failure, Success&gt;</code> from the <code>dartz</code> package. This replaces try-catch with explicit error handling — every function declares that it can either fail (Left) or succeed (Right).</p>
+
+                <h2>Layer 2: Data</h2>
+                <p>The data layer implements the repository interfaces defined in the domain layer. It handles API calls, local storage, caching, and data transformation:</p>
+                <pre><code>// Model: extends Entity with serialization
+class UserModel extends User {
+  const UserModel({
+    required super.id,
+    required super.name,
+    required super.email,
+    required super.createdAt,
+  });
+
+  factory UserModel.fromJson(Map&lt;String, dynamic&gt; json) {
+    return UserModel(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      email: json['email'] as String,
+      createdAt: DateTime.parse(json['created_at'] as String),
+    );
+  }
+
+  Map&lt;String, dynamic&gt; toJson() => {
+    'id': id,
+    'name': name,
+    'email': email,
+    'created_at': createdAt.toIso8601String(),
+  };
+}
+
+// Data source: handles raw API/DB calls
+abstract class AuthRemoteDataSource {
+  Future&lt;UserModel&gt; login(String email, String password);
+  Future&lt;UserModel&gt; register(String name, String email, String password);
+}
+
+class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
+  final http.Client client;
+  const AuthRemoteDataSourceImpl(this.client);
+
+  @override
+  Future&lt;UserModel&gt; login(String email, String password) async {
+    final response = await client.post(
+      Uri.parse('$baseUrl/auth/login'),
+      body: jsonEncode({'email': email, 'password': password}),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      return UserModel.fromJson(jsonDecode(response.body)['user']);
+    } else {
+      throw ServerException(message: 'Login failed');
+    }
+  }
+}
+
+// Repository implementation: orchestrates data sources
+class AuthRepositoryImpl implements AuthRepository {
+  final AuthRemoteDataSource remoteDataSource;
+  final AuthLocalDataSource localDataSource;
+  final NetworkInfo networkInfo;
+
+  const AuthRepositoryImpl({
+    required this.remoteDataSource,
+    required this.localDataSource,
+    required this.networkInfo,
+  });
+
+  @override
+  Future&lt;Either&lt;Failure, User&gt;&gt; login(String email, String password) async {
+    if (!await networkInfo.isConnected) {
+      return Left(NetworkFailure());
+    }
+    try {
+      final user = await remoteDataSource.login(email, password);
+      await localDataSource.cacheUser(user);
+      return Right(user);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
+    }
+  }
+}</code></pre>
+
+                <h2>Layer 3: Presentation</h2>
+                <p>The presentation layer contains your UI widgets and state management. It depends on use cases — never directly on data sources:</p>
+                <pre><code>// BLoC: connects UI events to use cases
+class AuthBloc extends Bloc&lt;AuthEvent, AuthState&gt; {
+  final LoginUseCase loginUseCase;
+  final GetCurrentUserUseCase getCurrentUserUseCase;
+
+  AuthBloc({
+    required this.loginUseCase,
+    required this.getCurrentUserUseCase,
+  }) : super(AuthInitial()) {
+    on&lt;LoginRequested&gt;(_onLoginRequested);
+    on&lt;CheckAuthStatus&gt;(_onCheckAuthStatus);
+  }
+
+  Future&lt;void&gt; _onLoginRequested(
+    LoginRequested event,
+    Emitter&lt;AuthState&gt; emit,
+  ) async {
+    emit(AuthLoading());
+    final result = await loginUseCase(
+      LoginParams(email: event.email, password: event.password),
+    );
+    result.fold(
+      (failure) => emit(AuthError(failure.message)),
+      (user) => emit(Authenticated(user)),
+    );
+  }
+}</code></pre>
+
+                <h2>Dependency Injection</h2>
+                <p>Use <code>get_it</code> to wire everything together. Register dependencies from the innermost layer outward:</p>
+                <pre><code>final sl = GetIt.instance;
+
+Future&lt;void&gt; init() async {
+  // BLoCs
+  sl.registerFactory(() => AuthBloc(
+    loginUseCase: sl(),
+    getCurrentUserUseCase: sl(),
+  ));
+
+  // Use cases
+  sl.registerLazySingleton(() => LoginUseCase(sl()));
+  sl.registerLazySingleton(() => GetCurrentUserUseCase(sl()));
+
+  // Repository
+  sl.registerLazySingleton&lt;AuthRepository&gt;(() => AuthRepositoryImpl(
+    remoteDataSource: sl(),
+    localDataSource: sl(),
+    networkInfo: sl(),
+  ));
+
+  // Data sources
+  sl.registerLazySingleton&lt;AuthRemoteDataSource&gt;(
+    () => AuthRemoteDataSourceImpl(sl()),
+  );
+  sl.registerLazySingleton&lt;AuthLocalDataSource&gt;(
+    () => AuthLocalDataSourceImpl(sl()),
+  );
+
+  // External
+  sl.registerLazySingleton(() => http.Client());
+  sl.registerLazySingleton(() => const FlutterSecureStorage());
+}</code></pre>
+
+                <h2>Testing Benefits</h2>
+                <p>The biggest advantage of Clean Architecture: every layer is independently testable:</p>
+                <pre><code>// Test use case with a mock repository
+class MockAuthRepository extends Mock implements AuthRepository {}
+
+void main() {
+  late LoginUseCase useCase;
+  late MockAuthRepository mockRepository;
+
+  setUp(() {
+    mockRepository = MockAuthRepository();
+    useCase = LoginUseCase(mockRepository);
+  });
+
+  test('should return User on successful login', () async {
+    when(() => mockRepository.login('test@test.com', 'password'))
+        .thenAnswer((_) async => Right(testUser));
+
+    final result = await useCase(
+      const LoginParams(email: 'test@test.com', password: 'password'),
+    );
+
+    expect(result, Right(testUser));
+    verify(() => mockRepository.login('test@test.com', 'password')).called(1);
+  });
+}</code></pre>
+
+                <h2>When NOT to Use Clean Architecture</h2>
+                <ul>
+                    <li><strong>Prototypes / MVPs</strong> — Too much boilerplate for throw-away code.</li>
+                    <li><strong>Simple apps</strong> — A 3-screen app doesn't need this complexity.</li>
+                    <li><strong>Solo weekend projects</strong> — The overhead isn't worth it for personal tools.</li>
+                </ul>
+                <p>Use Clean Architecture when your app will be maintained long-term, has complex business logic, needs comprehensive testing, or is worked on by a team. For everything else, keep it simple.</p>
+
+                <h2>Conclusion</h2>
+                <p>Clean Architecture adds upfront structure but pays dividends as your app grows. The three-layer approach (Domain → Data → Presentation) keeps your code modular, testable, and resistant to change. Start with the domain layer, define your business rules, then build outward. Your future self — and your team — will thank you.</p>
+
+                <div class="article-tags">
+                    <a href="../blog.html" class="article-tag">Flutter</a>
+                    <a href="../blog.html" class="article-tag">Architecture</a>
+                    <a href="../blog.html" class="article-tag">Clean Code</a>
+                    <a href="../blog.html" class="article-tag">Design Patterns</a>
+                    <a href="../blog.html" class="article-tag">Testing</a>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section style="background: var(--bg-elevated); text-align: center; padding: 6rem 4rem;">
+        <div class="section-label" style="justify-content: center;">More Articles</div>
+        <h2 class="section-title" style="text-align: center;">Keep Reading</h2>
+        <p class="section-desc" style="margin: 0 auto 2rem; text-align: center;">Explore more articles on development.</p>
+        <a href="../blog.html" class="btn-primary">← Back to Blog</a>
+    </section>
+
+    <footer>
+        <div class="footer-text">© 2026 <span>k.dev</span> — Crafted with precision</div>
+        <div class="footer-links"><a href="../index.html" class="footer-link">Home</a><a href="../projects.html" class="footer-link">Projects</a><a href="../blog.html" class="footer-link">Blog</a><a href="../about.html" class="footer-link">About</a><a href="../contact.html" class="footer-link">Contact</a></div>
+        <div class="footer-text">Designed &amp; built by <span>KDev</span></div>
+    </footer>
+
+    <script>
+        const navToggle=document.querySelector('.nav-toggle'),mobileMenu=document.querySelector('.mobile-menu');if(navToggle&&mobileMenu){navToggle.addEventListener('click',()=>{navToggle.classList.toggle('open');mobileMenu.classList.toggle('open');document.body.style.overflow=mobileMenu.classList.contains('open')?'hidden':''});mobileMenu.querySelectorAll('a').forEach(l=>{l.addEventListener('click',()=>{navToggle.classList.remove('open');mobileMenu.classList.remove('open');document.body.style.overflow=''})})}
+        const nav=document.getElementById('nav');window.addEventListener('scroll',()=>{nav.classList.toggle('scrolled',window.scrollY>50)});
+    </script>
+</body>
+</html>
