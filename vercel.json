@@ -1,5 +1,8 @@
 {
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
   "rewrites": [
-    { "source": "/ads.txt", "destination": "/ads.txt" }
+    { "source": "/ads.txt", "destination": "/ads.txt" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building Production-Ready APIs with Go: A Complete Guide — KDev</title>
+    <meta name="description" content="From project structure to deployment — learn how to build robust, scalable APIs with Go. Covers middleware, error handling, database patterns, and production deployment.">
+    <meta name="keywords" content="Go API, Golang backend, REST API, Go production, Go middleware, SQLC, PostgreSQL Go, Go tutorial">
+    <meta name="author" content="KDev">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Building Production-Ready APIs with Go: A Complete Guide">
+    <meta property="og:description" content="Learn how to build robust, scalable APIs with Go — from structure to deployment.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://kdev.vercel.app/blog/go-production-api">
+    <meta property="article:published_time" content="2026-02-08">
+    <meta property="article:author" content="KDev">
+    <meta property="article:tag" content="Go">
+    <meta property="article:tag" content="Backend">
+    
+    <!-- AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7247328493564455" crossorigin="anonymous"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+    <!-- Nav -->
+    <nav id="nav">
+        <a href="../index.html" class="nav-logo">k<span>.</span>dev</a>
+        <div class="nav-links">
+            <a href="../index.html">Home</a>
+            <a href="../projects.html">Projects</a>
+            <a href="../blog.html" class="active">Blog</a>
+            <a href="../about.html">About</a>
+            <a href="../contact.html">Contact</a>
+        </div>
+        <div class="nav-status">Available for work</div>
+        <button class="nav-toggle" aria-label="Toggle navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <a href="../index.html">Home</a>
+        <a href="../projects.html">Projects</a>
+        <a href="../blog.html" class="active">Blog</a>
+        <a href="../about.html">About</a>
+        <a href="../contact.html">Contact</a>
+    </div>
+
+    <!-- Article Header -->
+    <header class="page-header">
+        <div class="page-header-grid"></div>
+        <div class="page-header-content">
+            <div class="breadcrumb">
+                <a href="../index.html">Home</a>
+                <span>/</span>
+                <a href="../blog.html">Blog</a>
+                <span>/</span>
+                <span>Go Production API</span>
+            </div>
+            <div class="page-tag">Go • Backend Development</div>
+            <h1 class="page-title">Building Production-Ready APIs with Go: A Complete Guide</h1>
+            <p class="page-desc">From project structure to deployment — learn how to build robust, scalable APIs with Go. Covers middleware, error handling, database patterns, and more.</p>
+        </div>
+    </header>
+
+    <!-- Article Content -->
+    <article class="container-narrow">
+        <div class="article-meta">
+            <div class="article-meta-item">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                February 8, 2026
+            </div>
+            <div class="article-meta-item">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                20 min read
+            </div>
+            <div class="article-meta-item">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                1,800+ views
+            </div>
+        </div>
+
+        <div class="article-content">
+            <p>Go has become my go-to language for building backend services. Its simplicity, excellent concurrency model, and fast compilation make it ideal for production APIs. In this guide, I'll share the patterns and practices I've developed over years of building Go services that handle millions of requests.</p>
+
+            <h2>Why Go for Backend Development?</h2>
+            
+            <p>Before diving into code, let's understand why Go excels for API development:</p>
+            
+            <ul>
+                <li><strong>Performance</strong> — Compiled to native code, Go services are fast and memory-efficient</li>
+                <li><strong>Concurrency</strong> — Goroutines and channels make concurrent programming natural</li>
+                <li><strong>Simplicity</strong> — The language is small and easy to learn</li>
+                <li><strong>Standard Library</strong> — Excellent HTTP and JSON support out of the box</li>
+                <li><strong>Static Typing</strong> — Catch errors at compile time, not in production</li>
+                <li><strong>Single Binary</strong> — Deployment is as simple as copying one file</li>
+            </ul>
+
+            <h2>Project Structure</h2>
+            
+            <p>A well-organized project structure is crucial for maintainability. Here's the structure I use for production APIs:</p>
+
+            <pre><code>myapi/
+├── cmd/
+│   └── api/
+│       └── main.go           # Application entry point
+├── internal/
+│   ├── config/
+│   │   └── config.go         # Configuration management
+│   ├── database/
+│   │   ├── database.go       # Database connection
+│   │   └── migrations/       # SQL migrations
+│   ├── handlers/
+│   │   ├── auth.go
+│   │   ├── users.go
+│   │   └── health.go
+│   ├── middleware/
+│   │   ├── auth.go
+│   │   ├── logging.go
+│   │   └── cors.go
+│   ├── models/
+│   │   └── user.go
+│   ├── repository/
+│   │   └── user_repository.go
+│   ├── services/
+│   │   └── user_service.go
+│   └── server/
+│       └── server.go         # HTTP server setup
+├── pkg/                      # Public packages
+│   └── validator/
+├── db/
+│   ├── migrations/
+│   └── queries/              # SQLC queries
+├── scripts/
+├── Dockerfile
+├── docker-compose.yml
+├── Makefile
+└── go.mod</code></pre>
+
+            <h3>Key Principles</h3>
+            
+            <ul>
+                <li><code>cmd/</code> — Entry points for executables</li>
+                <li><code>internal/</code> — Private application code (cannot be imported by other modules)</li>
+                <li><code>pkg/</code> — Public packages that can be imported</li>
+                <li>Separate handlers, services, and repositories for clear responsibility</li>
+            </ul>
+
+            <h2>Configuration Management</h2>
+            
+            <p>Production applications need flexible configuration. I use environment variables with sensible defaults:</p>
+
+            <pre><code>// internal/config/config.go
+package config
+
+import (
+    "os"
+    "strconv"
+    "time"
+)
+
+type Config struct {
+    Server   ServerConfig
+    Database DatabaseConfig
+    JWT      JWTConfig
+}
+
+type ServerConfig struct {
+    Host         string
+    Port         int
+    ReadTimeout  time.Duration
+    WriteTimeout time.Duration
+}
+
+type DatabaseConfig struct {
+    Host     string
+    Port     int
+    User     string
+    Password string
+    DBName   string
+    SSLMode  string
+}
+
+type JWTConfig struct {
+    Secret     string
+    Expiration time.Duration
+}
+
+func Load() *Config {
+    return &Config{
+        Server: ServerConfig{
+            Host:         getEnv("SERVER_HOST", "0.0.0.0"),
+            Port:         getEnvAsInt("SERVER_PORT", 8080),
+            ReadTimeout:  getEnvAsDuration("SERVER_READ_TIMEOUT", 10*time.Second),
+            WriteTimeout: getEnvAsDuration("SERVER_WRITE_TIMEOUT", 10*time.Second),
+        },
+        Database: DatabaseConfig{
+            Host:     getEnv("DB_HOST", "localhost"),
+            Port:     getEnvAsInt("DB_PORT", 5432),
+            User:     getEnv("DB_USER", "postgres"),
+            Password: getEnv("DB_PASSWORD", ""),
+            DBName:   getEnv("DB_NAME", "myapp"),
+            SSLMode:  getEnv("DB_SSLMODE", "disable"),
+        },
+        JWT: JWTConfig{
+            Secret:     getEnv("JWT_SECRET", "your-secret-key"),
+            Expiration: getEnvAsDuration("JWT_EXPIRATION", 24*time.Hour),
+        },
+    }
+}
+
+func getEnv(key, defaultValue string) string {
+    if value, exists := os.LookupEnv(key); exists {
+        return value
+    }
+    return defaultValue
+}
+
+func getEnvAsInt(key string, defaultValue int) int {
+    if value, exists := os.LookupEnv(key); exists {
+        if intVal, err := strconv.Atoi(value); err == nil {
+            return intVal
+        }
+    }
+    return defaultValue
+}
+
+func getEnvAsDuration(key string, defaultValue time.Duration) time.Duration {
+    if value, exists := os.LookupEnv(key); exists {
+        if duration, err := time.ParseDuration(value); err == nil {
+            return duration
+        }
+    }
+    return defaultValue
+}</code></pre>
+
+            <h2>HTTP Server Setup</h2>
+            
+            <p>I use the Chi router for its composability and middleware support, but the standard library works too:</p>
+
+            <pre><code>// internal/server/server.go
+package server
+
+import (
+    "context"
+    "fmt"
+    "log"
+    "net/http"
+    "os"
+    "os/signal"
+    "syscall"
+    "time"
+
+    "github.com/go-chi/chi/v5"
+    "github.com/go-chi/chi/v5/middleware"
+    
+    "myapi/internal/config"
+    "myapi/internal/handlers"
+    mw "myapi/internal/middleware"
+)
+
+type Server struct {
+    cfg    *config.Config
+    router *chi.Mux
+    http   *http.Server
+}
+
+func New(cfg *config.Config, h *handlers.Handlers) *Server {
+    r := chi.NewRouter()
+    
+    // Global middleware
+    r.Use(middleware.RequestID)
+    r.Use(middleware.RealIP)
+    r.Use(mw.Logger)
+    r.Use(middleware.Recoverer)
+    r.Use(mw.CORS)
+    r.Use(middleware.Timeout(30 * time.Second))
+    
+    // Health check (no auth)
+    r.Get("/health", h.Health.Check)
+    
+    // API routes
+    r.Route("/api/v1", func(r chi.Router) {
+        // Public routes
+        r.Post("/auth/register", h.Auth.Register)
+        r.Post("/auth/login", h.Auth.Login)
+        
+        // Protected routes
+        r.Group(func(r chi.Router) {
+            r.Use(mw.JWTAuth(cfg.JWT.Secret))
+            
+            r.Get("/users/me", h.Users.GetCurrentUser)
+            r.Put("/users/me", h.Users.UpdateCurrentUser)
+            r.Get("/users/{id}", h.Users.GetUser)
+        })
+    })
+    
+    return &Server{
+        cfg:    cfg,
+        router: r,
+        http: &http.Server{
+            Addr:         fmt.Sprintf("%s:%d", cfg.Server.Host, cfg.Server.Port),
+            Handler:      r,
+            ReadTimeout:  cfg.Server.ReadTimeout,
+            WriteTimeout: cfg.Server.WriteTimeout,
+        },
+    }
+}
+
+func (s *Server) Start() error {
+    // Graceful shutdown
+    done := make(chan os.Signal, 1)
+    signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
+    
+    go func() {
+        log.Printf("Server starting on %s", s.http.Addr)
+        if err := s.http.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+            log.Fatalf("Server error: %v", err)
+        }
+    }()
+    
+    <-done
+    log.Println("Server stopping...")
+    
+    ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+    defer cancel()
+    
+    return s.http.Shutdown(ctx)
+}</code></pre>
+
+            <h2>Database Layer with SQLC</h2>
+            
+            <p>I use SQLC to generate type-safe Go code from SQL queries. It's faster than ORMs and gives you full control over your queries:</p>
+
+            <pre><code>-- db/queries/users.sql
+
+-- name: GetUser :one
+SELECT id, email, name, created_at, updated_at
+FROM users
+WHERE id = $1;
+
+-- name: GetUserByEmail :one
+SELECT id, email, password_hash, name, created_at, updated_at
+FROM users
+WHERE email = $1;
+
+-- name: CreateUser :one
+INSERT INTO users (email, password_hash, name)
+VALUES ($1, $2, $3)
+RETURNING id, email, name, created_at, updated_at;
+
+-- name: UpdateUser :one
+UPDATE users
+SET name = $2, updated_at = NOW()
+WHERE id = $1
+RETURNING id, email, name, created_at, updated_at;
+
+-- name: ListUsers :many
+SELECT id, email, name, created_at, updated_at
+FROM users
+ORDER BY created_at DESC
+LIMIT $1 OFFSET $2;</code></pre>
+
+            <p>SQLC generates Go code that you can use in your repository:</p>
+
+            <pre><code>// internal/repository/user_repository.go
+package repository
+
+import (
+    "context"
+    
+    "myapi/internal/database/sqlc"
+)
+
+type UserRepository struct {
+    queries *sqlc.Queries
+}
+
+func NewUserRepository(queries *sqlc.Queries) *UserRepository {
+    return &UserRepository{queries: queries}
+}
+
+func (r *UserRepository) GetByID(ctx context.Context, id int64) (*sqlc.User, error) {
+    return r.queries.GetUser(ctx, id)
+}
+
+func (r *UserRepository) GetByEmail(ctx context.Context, email string) (*sqlc.User, error) {
+    return r.queries.GetUserByEmail(ctx, email)
+}
+
+func (r *UserRepository) Create(ctx context.Context, params sqlc.CreateUserParams) (*sqlc.User, error) {
+    return r.queries.CreateUser(ctx, params)
+}
+
+func (r *UserRepository) List(ctx context.Context, limit, offset int32) ([]sqlc.User, error) {
+    return r.queries.ListUsers(ctx, sqlc.ListUsersParams{
+        Limit:  limit,
+        Offset: offset,
+    })
+}</code></pre>
+
+            <h2>Error Handling</h2>
+            
+            <p>Production APIs need consistent error handling. I use custom error types that can be translated to HTTP responses:</p>
+
+            <pre><code>// internal/errors/errors.go
+package errors
+
+import (
+    "errors"
+    "net/http"
+)
+
+type AppError struct {
+    Code    int    `json:"-"`
+    Message string `json:"message"`
+    Details string `json:"details,omitempty"`
+}
+
+func (e *AppError) Error() string {
+    return e.Message
+}
+
+// Common errors
+var (
+    ErrNotFound       = &AppError{Code: http.StatusNotFound, Message: "Resource not found"}
+    ErrUnauthorized   = &AppError{Code: http.StatusUnauthorized, Message: "Unauthorized"}
+    ErrForbidden      = &AppError{Code: http.StatusForbidden, Message: "Forbidden"}
+    ErrBadRequest     = &AppError{Code: http.StatusBadRequest, Message: "Bad request"}
+    ErrInternalServer = &AppError{Code: http.StatusInternalServerError, Message: "Internal server error"}
+)
+
+func NewBadRequest(details string) *AppError {
+    return &AppError{
+        Code:    http.StatusBadRequest,
+        Message: "Bad request",
+        Details: details,
+    }
+}
+
+func NewNotFound(resource string) *AppError {
+    return &AppError{
+        Code:    http.StatusNotFound,
+        Message: resource + " not found",
+    }
+}
+
+// IsAppError checks if an error is an AppError
+func IsAppError(err error) (*AppError, bool) {
+    var appErr *AppError
+    if errors.As(err, &appErr) {
+        return appErr, true
+    }
+    return nil, false
+}</code></pre>
+
+            <h2>Middleware</h2>
+            
+            <p>Well-designed middleware keeps your handlers clean. Here's an example of authentication middleware:</p>
+
+            <pre><code>// internal/middleware/auth.go
+package middleware
+
+import (
+    "context"
+    "net/http"
+    "strings"
+    
+    "github.com/golang-jwt/jwt/v5"
+    
+    "myapi/internal/errors"
+    "myapi/internal/response"
+)
+
+type contextKey string
+const UserIDKey contextKey = "userID"
+
+func JWTAuth(secret string) func(http.Handler) http.Handler {
+    return func(next http.Handler) http.Handler {
+        return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+            authHeader := r.Header.Get("Authorization")
+            if authHeader == "" {
+                response.Error(w, errors.ErrUnauthorized)
+                return
+            }
+            
+            parts := strings.Split(authHeader, " ")
+            if len(parts) != 2 || parts[0] != "Bearer" {
+                response.Error(w, errors.ErrUnauthorized)
+                return
+            }
+            
+            token, err := jwt.Parse(parts[1], func(token *jwt.Token) (interface{}, error) {
+                if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+                    return nil, errors.ErrUnauthorized
+                }
+                return []byte(secret), nil
+            })
+            
+            if err != nil || !token.Valid {
+                response.Error(w, errors.ErrUnauthorized)
+                return
+            }
+            
+            claims, ok := token.Claims.(jwt.MapClaims)
+            if !ok {
+                response.Error(w, errors.ErrUnauthorized)
+                return
+            }
+            
+            userID, ok := claims["user_id"].(float64)
+            if !ok {
+                response.Error(w, errors.ErrUnauthorized)
+                return
+            }
+            
+            ctx := context.WithValue(r.Context(), UserIDKey, int64(userID))
+            next.ServeHTTP(w, r.WithContext(ctx))
+        })
+    }
+}
+
+// GetUserID extracts user ID from context
+func GetUserID(ctx context.Context) (int64, bool) {
+    userID, ok := ctx.Value(UserIDKey).(int64)
+    return userID, ok
+}</code></pre>
+
+            <h2>Response Helpers</h2>
+            
+            <p>Consistent JSON responses make your API easier to consume:</p>
+
+            <pre><code>// internal/response/response.go
+package response
+
+import (
+    "encoding/json"
+    "net/http"
+    
+    "myapi/internal/errors"
+)
+
+type Response struct {
+    Success bool        `json:"success"`
+    Data    interface{} `json:"data,omitempty"`
+    Error   *ErrorBody  `json:"error,omitempty"`
+}
+
+type ErrorBody struct {
+    Message string `json:"message"`
+    Details string `json:"details,omitempty"`
+}
+
+func JSON(w http.ResponseWriter, status int, data interface{}) {
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(status)
+    
+    resp := Response{
+        Success: status >= 200 && status < 300,
+        Data:    data,
+    }
+    
+    json.NewEncoder(w).Encode(resp)
+}
+
+func Error(w http.ResponseWriter, err error) {
+    appErr, ok := errors.IsAppError(err)
+    if !ok {
+        appErr = errors.ErrInternalServer
+    }
+    
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(appErr.Code)
+    
+    resp := Response{
+        Success: false,
+        Error: &ErrorBody{
+            Message: appErr.Message,
+            Details: appErr.Details,
+        },
+    }
+    
+    json.NewEncoder(w).Encode(resp)
+}
+
+func Created(w http.ResponseWriter, data interface{}) {
+    JSON(w, http.StatusCreated, data)
+}
+
+func OK(w http.ResponseWriter, data interface{}) {
+    JSON(w, http.StatusOK, data)
+}
+
+func NoContent(w http.ResponseWriter) {
+    w.WriteHeader(http.StatusNoContent)
+}</code></pre>
+
+            <h2>Production Deployment</h2>
+            
+            <p>A multi-stage Dockerfile keeps your images small:</p>
+
+            <pre><code># Dockerfile
+FROM golang:1.22-alpine AS builder
+
+WORKDIR /app
+
+# Download dependencies
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copy source and build
+COPY . .
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o /app/server ./cmd/api
+
+# Final stage
+FROM alpine:3.19
+
+RUN apk --no-cache add ca-certificates tzdata
+
+WORKDIR /app
+
+COPY --from=builder /app/server .
+
+EXPOSE 8080
+
+HEALTHCHECK --interval=30s --timeout=3s \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1
+
+USER nobody
+
+ENTRYPOINT ["./server"]</code></pre>
+
+            <h2>Testing</h2>
+            
+            <p>Test your handlers with table-driven tests:</p>
+
+            <pre><code>// internal/handlers/users_test.go
+func TestGetUser(t *testing.T) {
+    tests := []struct {
+        name       string
+        userID     string
+        setupMock  func(*mocks.UserService)
+        wantStatus int
+        wantBody   string
+    }{
+        {
+            name:   "success",
+            userID: "1",
+            setupMock: func(m *mocks.UserService) {
+                m.On("GetByID", mock.Anything, int64(1)).
+                    Return(&models.User{ID: 1, Name: "John"}, nil)
+            },
+            wantStatus: http.StatusOK,
+        },
+        {
+            name:   "not found",
+            userID: "999",
+            setupMock: func(m *mocks.UserService) {
+                m.On("GetByID", mock.Anything, int64(999)).
+                    Return(nil, errors.ErrNotFound)
+            },
+            wantStatus: http.StatusNotFound,
+        },
+    }
+    
+    for _, tt := range tests {
+        t.Run(tt.name, func(t *testing.T) {
+            mockService := new(mocks.UserService)
+            tt.setupMock(mockService)
+            
+            handler := handlers.NewUsers(mockService)
+            
+            req := httptest.NewRequest("GET", "/users/"+tt.userID, nil)
+            rr := httptest.NewRecorder()
+            
+            // Add chi URL params
+            rctx := chi.NewRouteContext()
+            rctx.URLParams.Add("id", tt.userID)
+            req = req.WithContext(context.WithValue(req.Context(), chi.RouteCtxKey, rctx))
+            
+            handler.GetUser(rr, req)
+            
+            assert.Equal(t, tt.wantStatus, rr.Code)
+            mockService.AssertExpectations(t)
+        })
+    }
+}</code></pre>
+
+            <h2>Conclusion</h2>
+            
+            <p>Building production-ready APIs with Go requires attention to structure, error handling, and deployment practices. The patterns I've shared here have served me well across multiple production systems handling significant traffic.</p>
+            
+            <p>Key takeaways:</p>
+            <ul>
+                <li>Use a clear project structure with separated responsibilities</li>
+                <li>Configure via environment variables with sensible defaults</li>
+                <li>Implement proper error handling with custom error types</li>
+                <li>Use SQLC for type-safe database queries</li>
+                <li>Write middleware for cross-cutting concerns</li>
+                <li>Test with table-driven tests</li>
+                <li>Deploy with minimal Docker images</li>
+            </ul>
+
+            <p>For more Go content, check out my article on <a href="websocket-go-flutter.html">building real-time features with WebSocket</a>.</p>
+
+            <div class="article-tags">
+                <a href="#" class="article-tag">Go</a>
+                <a href="#" class="article-tag">Golang</a>
+                <a href="#" class="article-tag">Backend</a>
+                <a href="#" class="article-tag">REST API</a>
+                <a href="#" class="article-tag">PostgreSQL</a>
+                <a href="#" class="article-tag">SQLC</a>
+                <a href="#" class="article-tag">Docker</a>
+            </div>
+        </div>
+    </article>
+
+    <!-- Related Posts -->
+    <section class="related-posts">
+        <div class="container-narrow">
+            <div class="related-posts-title">Related Articles</div>
+            <div class="related-posts-grid">
+                <article class="blog-card">
+                    <div class="blog-card-category">Docker • DevOps</div>
+                    <h3 class="blog-card-title">
+                        <a href="docker-go-deployment.html">Docker for Go Developers: From Development to Production</a>
+                    </h3>
+                    <p class="blog-card-excerpt">
+                        A practical guide to containerizing Go applications with multi-stage builds and CI/CD integration.
+                    </p>
+                    <div class="blog-card-meta">
+                        <span>⏱️ 14 min read</span>
+                    </div>
+                </article>
+
+                <article class="blog-card">
+                    <div class="blog-card-category">WebSocket • Real-time</div>
+                    <h3 class="blog-card-title">
+                        <a href="websocket-go-flutter.html">Building Real-time Features with WebSocket</a>
+                    </h3>
+                    <p class="blog-card-excerpt">
+                        Complete tutorial on WebSocket communication between Go server and Flutter client.
+                    </p>
+                    <div class="blog-card-meta">
+                        <span>⏱️ 22 min read</span>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-text">© 2026 <span>k.dev</span> — Crafted with precision</div>
+        <div class="footer-links">
+            <a href="../index.html" class="footer-link">Home</a>
+            <a href="../projects.html" class="footer-link">Projects</a>
+            <a href="../blog.html" class="footer-link">Blog</a>
+            <a href="../about.html" class="footer-link">About</a>
+            <a href="../contact.html" class="footer-link">Contact</a>
+        </div>
+        <div class="footer-text">Designed & built by <span>KDev</span></div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const navToggle = document.querySelector('.nav-toggle');
+        const mobileMenu = document.querySelector('.mobile-menu');
+
+        if (navToggle && mobileMenu) {
+            navToggle.addEventListener('click', () => {
+                navToggle.classList.toggle('open');
+                mobileMenu.classList.toggle('open');
+                document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+            });
+
+            // Close menu when clicking a link
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navToggle.classList.remove('open');
+                    mobileMenu.classList.remove('open');
+                    document.body.style.overflow = '';
+                });
+            });
+        }
+
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 50);
+        });
+    </script>
+</body>
+</html>

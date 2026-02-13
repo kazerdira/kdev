@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact — KDev | Get in Touch</title>
+    <meta name="description" content="Get in touch with KDev for freelance work, collaborations, or just to say hello. Available for full-stack development projects.">
+    <meta name="keywords" content="contact KDev, hire developer, freelance developer, Flutter developer contact, Go developer contact">
+    <meta name="author" content="KDev">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Contact — KDev | Get in Touch">
+    <meta property="og:description" content="Get in touch for freelance work, collaborations, or just to say hello.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kdev.vercel.app/contact">
+    
+    <!-- AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7247328493564455" crossorigin="anonymous"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+        
+        .contact-info {
+            padding: 2rem 0;
+        }
+        
+        .contact-method {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .contact-method:last-child {
+            border-bottom: none;
+        }
+        
+        .contact-method-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            flex-shrink: 0;
+        }
+        
+        .contact-method-content h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .contact-method-content p {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+        }
+        
+        .contact-method-content a {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        .contact-method-content a:hover {
+            text-decoration: underline;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .social-link {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            transition: all 0.3s var(--ease);
+        }
+        
+        .social-link:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+        
+        .faq-section {
+            margin-top: 3rem;
+        }
+        
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 0;
+        }
+        
+        .faq-question {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .faq-question::before {
+            content: '?';
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--accent);
+            color: var(--bg);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .faq-answer {
+            font-size: 0.95rem;
+            color: var(--text-dim);
+            line-height: 1.7;
+            padding-left: 2.25rem;
+        }
+        
+        @media (max-width: 768px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Nav -->
+    <nav id="nav">
+        <a href="index.html" class="nav-logo">k<span>.</span>dev</a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="projects.html">Projects</a>
+            <a href="blog.html">Blog</a>
+            <a href="about.html">About</a>
+            <a href="contact.html" class="active">Contact</a>
+        </div>
+        <div class="nav-status">Available for work</div>
+        <button class="nav-toggle" aria-label="Toggle navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <a href="index.html">Home</a>
+        <a href="projects.html">Projects</a>
+        <a href="blog.html">Blog</a>
+        <a href="about.html">About</a>
+        <a href="contact.html" class="active">Contact</a>
+    </div>
+
+    <!-- Page Header -->
+    <header class="page-header">
+        <div class="page-header-grid"></div>
+        <div class="page-header-content">
+            <div class="page-tag">Get in Touch</div>
+            <h1 class="page-title">Let's build <span class="gradient">something great</span> together</h1>
+            <p class="page-desc">Have a project in mind? Want to collaborate? Or just want to say hello? I'd love to hear from you.</p>
+        </div>
+    </header>
+
+    <!-- Contact Section -->
+    <section>
+        <div class="container">
+            <div class="contact-grid">
+                <!-- Contact Form -->
+                <div class="reveal">
+                    <div class="section-label">Send a Message</div>
+                    <h2 class="section-title" style="margin-bottom: 2rem;">Contact Form</h2>
+                    
+                    <form class="contact-form" action="https://formspree.io/f/your-form-id" method="POST">
+                        <div class="form-group">
+                            <label class="form-label" for="name">Your Name *</label>
+                            <input type="text" id="name" name="name" class="form-input" required placeholder="John Doe">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" class="form-input" required placeholder="john@example.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="subject">Subject *</label>
+                            <input type="text" id="subject" name="subject" class="form-input" required placeholder="Project Inquiry">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="budget">Project Budget (Optional)</label>
+                            <select id="budget" name="budget" class="form-input">
+                                <option value="">Select a range...</option>
+                                <option value="<$1k">Less than $1,000</option>
+                                <option value="$1k-$5k">$1,000 - $5,000</option>
+                                <option value="$5k-$10k">$5,000 - $10,000</option>
+                                <option value="$10k-$25k">$10,000 - $25,000</option>
+                                <option value="$25k+">$25,000+</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="message">Your Message *</label>
+                            <textarea id="message" name="message" class="form-textarea" required placeholder="Tell me about your project, timeline, and what you're looking for..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary">Send Message →</button>
+                    </form>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="contact-info reveal">
+                    <div class="section-label">Contact Info</div>
+                    <h2 class="section-title" style="margin-bottom: 2rem;">Other Ways to Reach Me</h2>
+                    
+                    <div class="contact-method">
+                        <div class="contact-method-icon">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                        </div>
+                        <div class="contact-method-content">
+                            <h3>Email</h3>
+                            <p>Best for project inquiries and collaborations</p>
+                            <a href="mailto:wolverix.app@gmail.com">wolverix.app@gmail.com</a>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <div class="contact-method-icon">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                        </div>
+                        <div class="contact-method-content">
+                            <h3>GitHub</h3>
+                            <p>Check out my open source work and contributions</p>
+                            <a href="https://github.com/kazerdira" target="_blank">github.com/kazerdira</a>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <div class="contact-method-icon">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        </div>
+                        <div class="contact-method-content">
+                            <h3>Response Time</h3>
+                            <p>I typically respond within</p>
+                            <span style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent);">24-48 hours</span>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <div class="contact-method-icon">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        </div>
+                        <div class="contact-method-content">
+                            <h3>Location</h3>
+                            <p>Based in Algeria, working with clients globally</p>
+                            <span style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent);">🇩🇿 Algeria (GMT+1)</span>
+                        </div>
+                    </div>
+
+                    <!-- Social Links -->
+                    <div style="margin-top: 2rem;">
+                        <h3 style="font-size: 0.9rem; color: var(--text-dim); margin-bottom: 1rem;">Connect on Social</h3>
+                        <div class="social-links">
+                            <a href="https://github.com/kazerdira" class="social-link" target="_blank" title="GitHub">
+                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                            </a>
+                            <a href="mailto:wolverix.app@gmail.com" class="social-link" title="Email">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section style="background: var(--bg-elevated);">
+        <div class="container-narrow">
+            <div class="section-label">FAQ</div>
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <p class="section-desc">Answers to common questions about working together.</p>
+
+            <div class="faq-section reveal">
+                <div class="faq-item">
+                    <div class="faq-question">What types of projects do you take on?</div>
+                    <div class="faq-answer">
+                        I specialize in full-stack development with a focus on mobile apps (Flutter) and backend systems (Go). 
+                        This includes real-time applications, e-commerce platforms, chat systems, video/audio apps, 
+                        and custom business applications. I take on both new projects and improvements to existing systems.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">What is your typical project process?</div>
+                    <div class="faq-answer">
+                        Every project starts with a discovery call to understand your requirements. 
+                        I then provide a proposal with scope, timeline, and pricing. 
+                        During development, I maintain regular communication with progress updates. 
+                        After delivery, I provide a warranty period for bug fixes and can discuss ongoing maintenance.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">How do you handle pricing?</div>
+                    <div class="faq-answer">
+                        I offer both fixed-price and hourly arrangements depending on the project. 
+                        Fixed-price works best for well-defined projects with clear requirements. 
+                        Hourly works better for ongoing development or projects where scope may evolve. 
+                        I'll recommend the best approach after understanding your needs.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">What is your availability?</div>
+                    <div class="faq-answer">
+                        I typically work with 1-2 clients at a time to ensure quality and focus. 
+                        Lead times vary based on current commitments — for larger projects, 
+                        booking 2-4 weeks in advance is recommended. For urgent needs, 
+                        reach out and I'll let you know what's possible.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Do you provide ongoing support and maintenance?</div>
+                    <div class="faq-answer">
+                        Yes! After project completion, I offer maintenance packages that include 
+                        bug fixes, security updates, performance monitoring, and feature additions. 
+                        I believe in long-term partnerships and many of my clients continue 
+                        working with me for ongoing development needs.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">Can you work with my existing team?</div>
+                    <div class="faq-answer">
+                        Absolutely. I've worked embedded in teams, alongside other developers, 
+                        and directly with product managers and designers. I'm comfortable with 
+                        different workflows, version control practices, and communication tools. 
+                        Clear communication and documentation are priorities.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section style="text-align: center; padding: 6rem 4rem;">
+        <div class="reveal">
+            <div class="section-label" style="justify-content: center;">Ready to Start?</div>
+            <h2 class="section-title">Don't Wait, Let's Talk</h2>
+            <p class="section-desc" style="margin-left: auto; margin-right: auto; text-align: center;">
+                The best time to start is now. Send me a message and let's discuss how I can help bring your project to life.
+            </p>
+            <a href="mailto:wolverix.app@gmail.com" class="btn-primary">Send Email →</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-text">© 2026 <span>k.dev</span> — Crafted with precision</div>
+        <div class="footer-links">
+            <a href="index.html" class="footer-link">Home</a>
+            <a href="projects.html" class="footer-link">Projects</a>
+            <a href="blog.html" class="footer-link">Blog</a>
+            <a href="about.html" class="footer-link">About</a>
+            <a href="contact.html" class="footer-link">Contact</a>
+        </div>
+        <div class="footer-text">Designed & built by <span>KDev</span></div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const navToggle = document.querySelector('.nav-toggle');
+        const mobileMenu = document.querySelector('.mobile-menu');
+
+        if (navToggle && mobileMenu) {
+            navToggle.addEventListener('click', () => {
+                navToggle.classList.toggle('open');
+                mobileMenu.classList.toggle('open');
+                document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+            });
+
+            // Close menu when clicking a link
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navToggle.classList.remove('open');
+                    mobileMenu.classList.remove('open');
+                    document.body.style.overflow = '';
+                });
+            });
+        }
+
+        // Nav scroll effect
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // Scroll reveal
+        const reveals = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        reveals.forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>

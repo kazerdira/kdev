@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog — KDev | Software Development Articles & Tutorials</title>
+    <meta name="description" content="Technical articles, tutorials, and insights on Flutter, Go, Firebase, Docker, and modern software development practices.">
+    <meta name="keywords" content="Flutter tutorials, Go programming, Firebase guide, Docker deployment, software development blog, mobile development">
+    <meta name="author" content="KDev">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Blog — KDev | Development Articles">
+    <meta property="og:description" content="Technical articles and tutorials on Flutter, Go, Firebase, and modern software development.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kdev.vercel.app/blog">
+    
+    <!-- AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7247328493564455" crossorigin="anonymous"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- Nav -->
+    <nav id="nav">
+        <a href="index.html" class="nav-logo">k<span>.</span>dev</a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="projects.html">Projects</a>
+            <a href="blog.html" class="active">Blog</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <div class="nav-status">Available for work</div>
+        <button class="nav-toggle" aria-label="Toggle navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <a href="index.html">Home</a>
+        <a href="projects.html">Projects</a>
+        <a href="blog.html" class="active">Blog</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+    </div>
+
+    <!-- Page Header -->
+    <header class="page-header">
+        <div class="page-header-grid"></div>
+        <div class="page-header-content">
+            <div class="page-tag">Articles & Tutorials</div>
+            <h1 class="page-title">Developer <span class="gradient">Blog</span></h1>
+            <p class="page-desc">Deep dives into software development, architecture patterns, and lessons learned from building production applications.</p>
+        </div>
+    </header>
+
+    <!-- Featured Article -->
+    <section>
+        <div class="section-label">Featured Article</div>
+        <div class="blog-card reveal" style="max-width: 800px; padding: 3rem;">
+            <div class="blog-card-category">Flutter • State Management</div>
+            <h2 class="blog-card-title" style="font-size: 1.8rem;">
+                <a href="blog/flutter-state-management-guide.html">The Complete Guide to Flutter State Management in 2026</a>
+            </h2>
+            <p class="blog-card-excerpt" style="font-size: 1rem;">
+                A comprehensive comparison of Provider, Riverpod, BLoC, and GetX — with real-world examples and recommendations for different project sizes. Learn when to use each solution and how to structure your Flutter apps for scalability.
+            </p>
+            <div class="blog-card-meta">
+                <span>📅 February 10, 2026</span>
+                <span>⏱️ 15 min read</span>
+                <span>👁️ 2.4k views</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Latest Articles -->
+    <section style="background: var(--bg-elevated);">
+        <div class="section-label">Latest Articles</div>
+        <h2 class="section-title">Recent Posts</h2>
+        <p class="section-desc">Fresh content on development practices, tools, and technologies.</p>
+
+        <div class="grid-2 reveal">
+            <!-- Article 1 -->
+            <article class="blog-card">
+                <div class="blog-card-category">Go • Backend</div>
+                <h3 class="blog-card-title">
+                    <a href="blog/go-production-api.html">Building Production-Ready APIs with Go: A Complete Guide</a>
+                </h3>
+                <p class="blog-card-excerpt">
+                    From project structure to deployment — learn how to build robust, scalable APIs with Go. Covers middleware, error handling, database patterns, and more.
+                </p>
+                <div class="blog-card-meta">
+                    <span>📅 February 8, 2026</span>
+                    <span>⏱️ 20 min read</span>
+                </div>
+            </article>
+
+            <!-- Article 2 -->
+            <article class="blog-card">
+                <div class="blog-card-category">Firebase • Real-time</div>
+                <h3 class="blog-card-title">
+                    <a href="blog/firebase-realtime-patterns.html">Firebase Real-time Database: Patterns and Best Practices</a>
+                </h3>
+                <p class="blog-card-excerpt">
+                    Master Firebase Realtime Database with proven patterns for data structure, security rules, offline persistence, and optimizing read/write operations.
+                </p>
+                <div class="blog-card-meta">
+                    <span>📅 February 5, 2026</span>
+                    <span>⏱️ 12 min read</span>
+                </div>
+            </article>
+
+            <!-- Article 3 -->
+            <article class="blog-card">
+                <div class="blog-card-category">Docker • DevOps</div>
+                <h3 class="blog-card-title">
+                    <a href="blog/docker-go-deployment.html">Docker for Go Developers: From Development to Production</a>
+                </h3>
+                <p class="blog-card-excerpt">
+                    A practical guide to containerizing Go applications — multi-stage builds, optimization techniques, health checks, and CI/CD integration.
+                </p>
+                <div class="blog-card-meta">
+                    <span>📅 February 2, 2026</span>
+                    <span>⏱️ 14 min read</span>
+                </div>
+            </article>
+
+            <!-- Article 4 -->
+            <article class="blog-card">
+                <div class="blog-card-category">Flutter • UI/UX</div>
+                <h3 class="blog-card-title">
+                    <a href="blog/flutter-custom-animations.html">Advanced Flutter Animations: Creating Fluid User Experiences</a>
+                </h3>
+                <p class="blog-card-excerpt">
+                    Go beyond basic animations with custom painters, physics simulations, and staggered animations that make your Flutter apps stand out.
+                </p>
+                <div class="blog-card-meta">
+                    <span>📅 January 28, 2026</span>
+                    <span>⏱️ 18 min read</span>
+                </div>
+            </article>
+
+            <!-- Article 5 -->
+            <article class="blog-card">
+                <div class="blog-card-category">Architecture • Patterns</div>
+                <h3 class="blog-card-title">
+                    <a href="blog/clean-architecture-flutter.html">Clean Architecture in Flutter: A Practical Implementation</a>
+                </h3>
+                <p class="blog-card-excerpt">
+                    Implement clean architecture in your Flutter projects with proper layer separation, dependency injection, and testable code structure.
+                </p>
+                <div class="blog-card-meta">
+                    <span>📅 January 24, 2026</span>
+                    <span>⏱️ 16 min read</span>
+                </div>
+            </article>
+
+            <!-- Article 6 -->
+            <article class="blog-card">
+                <div class="blog-card-category">WebSocket • Real-time</div>
+                <h3 class="blog-card-title">
+                    <a href="blog/websocket-go-flutter.html">Building Real-time Features with WebSocket: Go Backend + Flutter Client</a>
+                </h3>
+                <p class="blog-card-excerpt">
+                    Complete tutorial on implementing WebSocket communication between a Go server and Flutter app — with reconnection, heartbeats, and message queuing.
+                </p>
+                <div class="blog-card-meta">
+                    <span>📅 January 20, 2026</span>
+                    <span>⏱️ 22 min read</span>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section>
+        <div class="section-label">Browse by Topic</div>
+        <h2 class="section-title">Categories</h2>
+        <p class="section-desc">Find articles on specific technologies and topics.</p>
+
+        <div class="grid-4 reveal">
+            <a href="#" class="skill-item" style="text-decoration: none;">
+                <div class="skill-icon">📱</div>
+                <div class="skill-name">Flutter</div>
+            </a>
+            <a href="#" class="skill-item" style="text-decoration: none;">
+                <div class="skill-icon">⚡</div>
+                <div class="skill-name">Go/Golang</div>
+            </a>
+            <a href="#" class="skill-item" style="text-decoration: none;">
+                <div class="skill-icon">🔥</div>
+                <div class="skill-name">Firebase</div>
+            </a>
+            <a href="#" class="skill-item" style="text-decoration: none;">
+                <div class="skill-icon">🐳</div>
+                <div class="skill-name">Docker</div>
+            </a>
+            <a href="#" class="skill-item" style="text-decoration: none;">
+                <div class="skill-icon">🔌</div>
+                <div class="skill-name">WebSocket</div>
+            </a>
+            <a href="#" class="skill-item" style="text-decoration: none;">
+                <div class="skill-icon">🏗️</div>
+                <div class="skill-name">Architecture</div>
+            </a>
+            <a href="#" class="skill-item" style="text-decoration: none;">
+                <div class="skill-icon">⚙️</div>
+                <div class="skill-name">DevOps</div>
+            </a>
+            <a href="#" class="skill-item" style="text-decoration: none;">
+                <div class="skill-icon">🎨</div>
+                <div class="skill-name">UI/UX</div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Older Articles -->
+    <section style="background: var(--bg-elevated);">
+        <div class="section-label">Archive</div>
+        <h2 class="section-title">More Articles</h2>
+        <p class="section-desc">Explore the complete archive of technical content.</p>
+
+        <div class="grid-3 reveal">
+            <!-- Archive Article 1 -->
+            <article class="blog-card">
+                <div class="blog-card-category">PostgreSQL • Database</div>
+                <h3 class="blog-card-title">
+                    <a href="#">SQLC: Type-Safe Database Queries in Go</a>
+                </h3>
+                <p class="blog-card-excerpt">
+                    Why I switched from GORM to SQLC and never looked back. Generate type-safe Go code from your SQL queries.
+                </p>
+                <div class="blog-card-meta">
+                    <span>📅 January 15, 2026</span>
+                    <span>⏱️ 10 min read</span>
+                </div>
+            </article>
+
+            <!-- Archive Article 2 -->
+            <article class="blog-card">
+                <div class="blog-card-category">Flutter • Testing</div>
+                <h3 class="blog-card-title">
+                    <a href="#">Testing Flutter Apps: Unit, Widget, and Integration Tests</a>
+                </h3>
+                <p class="blog-card-excerpt">
+                    A complete testing strategy for Flutter applications with practical examples and CI/CD integration.
+                </p>
+                <div class="blog-card-meta">
+                    <span>📅 January 10, 2026</span>
+                    <span>⏱️ 14 min read</span>
+                </div>
+            </article>
+
+            <!-- Archive Article 3 -->
+            <article class="blog-card">
+                <div class="blog-card-category">Agora • LiveKit</div>
+                <h3 class="blog-card-title">
+                    <a href="#">Choosing a Real-time Video SDK: Agora vs LiveKit</a>
+                </h3>
+                <p class="blog-card-excerpt">
+                    A detailed comparison of two popular video SDKs based on my experience building production apps with both.
+                </p>
+                <div class="blog-card-meta">
+                    <span>📅 January 5, 2026</span>
+                    <span>⏱️ 12 min read</span>
+                </div>
+            </article>
+
+            <!-- Archive Article 4 -->
+            <article class="blog-card">
+                <div class="blog-card-category">Go • Concurrency</div>
+                <h3 class="blog-card-title">
+                    <a href="#">Go Concurrency Patterns for Real-time Applications</a>
+                </h3>
+                <p class="blog-card-excerpt">
+                    Practical concurrency patterns with goroutines and channels for building responsive backend systems.
+                </p>
+                <div class="blog-card-meta">
+                    <span>📅 December 28, 2025</span>
+                    <span>⏱️ 16 min read</span>
+                </div>
+            </article>
+
+            <!-- Archive Article 5 -->
+            <article class="blog-card">
+                <div class="blog-card-category">Flutter • Performance</div>
+                <h3 class="blog-card-title">
+                    <a href="#">Flutter Performance Optimization: A Deep Dive</a>
+                </h3>
+                <p class="blog-card-excerpt">
+                    Identify and fix performance bottlenecks in your Flutter apps with practical profiling techniques.
+                </p>
+                <div class="blog-card-meta">
+                    <span>📅 December 20, 2025</span>
+                    <span>⏱️ 18 min read</span>
+                </div>
+            </article>
+
+            <!-- Archive Article 6 -->
+            <article class="blog-card">
+                <div class="blog-card-category">CI/CD • Automation</div>
+                <h3 class="blog-card-title">
+                    <a href="#">Automating Flutter Builds with GitHub Actions</a>
+                </h3>
+                <p class="blog-card-excerpt">
+                    Set up automated builds, tests, and deployments for your Flutter apps using GitHub Actions.
+                </p>
+                <div class="blog-card-meta">
+                    <span>📅 December 15, 2025</span>
+                    <span>⏱️ 11 min read</span>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section style="text-align: center; padding: 6rem 4rem;">
+        <div class="reveal">
+            <div class="section-label" style="justify-content: center;">Stay Updated</div>
+            <h2 class="section-title">Get New Articles</h2>
+            <p class="section-desc" style="margin-left: auto; margin-right: auto; text-align: center;">
+                Subscribe to receive notifications when new articles are published. No spam, just quality content.
+            </p>
+            <div style="display: flex; gap: 1rem; max-width: 400px; margin: 0 auto;">
+                <input type="email" placeholder="your@email.com" class="form-input" style="flex: 1;">
+                <button class="btn-primary">Subscribe</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-text">© 2026 <span>k.dev</span> — Crafted with precision</div>
+        <div class="footer-links">
+            <a href="index.html" class="footer-link">Home</a>
+            <a href="projects.html" class="footer-link">Projects</a>
+            <a href="blog.html" class="footer-link">Blog</a>
+            <a href="about.html" class="footer-link">About</a>
+            <a href="contact.html" class="footer-link">Contact</a>
+        </div>
+        <div class="footer-text">Designed & built by <span>KDev</span></div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const navToggle = document.querySelector('.nav-toggle');
+        const mobileMenu = document.querySelector('.mobile-menu');
+
+        if (navToggle && mobileMenu) {
+            navToggle.addEventListener('click', () => {
+                navToggle.classList.toggle('open');
+                mobileMenu.classList.toggle('open');
+                document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+            });
+
+            // Close menu when clicking a link
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navToggle.classList.remove('open');
+                    mobileMenu.classList.remove('open');
+                    document.body.style.overflow = '';
+                });
+            });
+        }
+
+        // Nav scroll effect
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // Scroll reveal
+        const reveals = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        reveals.forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
