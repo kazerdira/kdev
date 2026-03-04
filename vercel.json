@@ -1,5 +1,16 @@
 {
-  "rewrites": [
-    { "source": "/ads.txt", "destination": "/ads.txt" }
+  "headers": [
+    {
+      "source": "/ads.txt",
+      "headers": [{ "key": "Content-Type", "value": "text/plain" }]
+    },
+    {
+      "source": "/robots.txt",
+      "headers": [{ "key": "Content-Type", "value": "text/plain" }]
+    },
+    {
+      "source": "/sitemap.xml",
+      "headers": [{ "key": "Content-Type", "value": "application/xml" }]
+    }
   ]
 }
